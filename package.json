@@ -1,0 +1,21 @@
+{
+  "name": "book-covers-extractor",
+  "version": "0.1.23",
+  "description": "This library extract cover from a lot of document formats from folder",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app",
+    "setup": "node setup"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ebook-convert": "^2.0.1",
+    "pdf-image": "^2.0.0",
+    "png-to-jpeg": "^1.0.1",
+    "sharp": "^0.25.2",
+    "shelljs": "^0.8.3",
+    "shelljs.exec": "^1.1.8"
+  }
+}
