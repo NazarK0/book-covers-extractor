@@ -6,7 +6,7 @@ const normalizeIfHomePath = sourceDir => {
   return sourceDir.startsWith("~") ? path.join(homedir, sourceDir.substring(1)) : sourceDir;
 };
 
-const InputDirectory = (dirPath, callback) => {
+const inputDirectory = (dirPath, callback) => {
   const normalized = normalizeIfHomePath(dirPath);
 
   fs.access(normalized, err => {
@@ -22,7 +22,7 @@ const InputDirectory = (dirPath, callback) => {
   });
 };
 
-const OutputDirectory = (dirPath, callback) => {
+const outputDirectory = (dirPath, callback) => {
   const normalized = normalizeIfHomePath(dirPath);
 
   fs.access(normalized, err => {
@@ -58,7 +58,7 @@ const fileName = filePath => {
 };
 
 module.exports = {
-  InputDirectory,
-  OutputDirectory,
+  inputDirectory,
+  outputDirectory,
   fileName,
 };

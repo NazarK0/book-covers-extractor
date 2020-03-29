@@ -1,6 +1,6 @@
-const getCover = require("./getBookCover");
+const BookCoversExtractor = require("./src/book-covers-extractor");
 
 //default destination folder = 'paperbacks'
-getCover("./books");
-//getCover("./books", "./books1");
-//getCover( "./foo", "./books1");
+BookCoversExtractor("./books");
+//BookCoversExtractor("./books", "./books1");
+//BookCoversExtractor( "./foo", "./books1");

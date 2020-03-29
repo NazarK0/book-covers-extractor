@@ -1,19 +1,19 @@
 const path = require("path");
 const fs = require("fs");
-const pathNormalizer = require("./pathNormalizer");
-const pdfCover = require("./pdfCover");
-const djvuCover = require("./djvuCover");
-const officeCover = require("./officeCover");
-const ebookCover = require("./ebookCover");
+const pathNormalizer = require("./helpers/pathNormalizer");
+const pdfParser = require("./parsers/pdf");
+const djvuParser = require("./parsers/djvu");
+const officeParser = require("./parsers/office");
+const ebookParser = require("./parsers/ebook");
 
-const getCover = (sourceDir, outDir = "./paperbacks") => {
-  pathNormalizer.InputDirectory(sourceDir, (err, absoluteSourceDir) => {
+const BookCoversExtractor = (sourceDir, outDir = "./paperbacks") => {
+  pathNormalizer.inputDirectory(sourceDir, (err, absoluteSourceDir) => {
     if (err) {
       console.error(err);
       return;
     }
 
-    pathNormalizer.OutputDirectory(outDir, (outError, absoluteOutDir) => {
+    pathNormalizer.outputDirectory(outDir, (outError, absoluteOutDir) => {
       if (outError) {
         console.error(outError);
         return;
@@ -43,25 +43,25 @@ const getCover = (sourceDir, outDir = "./paperbacks") => {
 
                 if (PDFfiles.length > 0) {
                   PDFfiles.forEach(file =>
-                    pdfCover(path.join(absoluteSourceDir, file), absoluteOutDir)
+                    pdfParser(path.join(absoluteSourceDir, file), absoluteOutDir)
                   );
                 }
 
                 if (DJVUfiles.length > 0) {
                   DJVUfiles.forEach(file =>
-                    djvuCover(path.join(absoluteSourceDir, file), absoluteOutDir)
+                    djvuParser(path.join(absoluteSourceDir, file), absoluteOutDir)
                   );
                 }
 
                 if (OFFICEfiles.length > 0) {
                   OFFICEfiles.forEach(file =>
-                    officeCover(path.join(absoluteSourceDir, file), absoluteOutDir)
+                    officeParser(path.join(absoluteSourceDir, file), absoluteOutDir)
                   );
                 }
 
                 if (EBOOKfiles.length > 0) {
                   EBOOKfiles.forEach(file =>
-                    ebookCover(path.join(absoluteSourceDir, file), absoluteOutDir)
+                    ebookParser(path.join(absoluteSourceDir, file), absoluteOutDir)
                   );
                 }
               }
@@ -73,4 +73,4 @@ const getCover = (sourceDir, outDir = "./paperbacks") => {
   });
 };
 
-module.exports = getCover;
+module.exports = BookCoversExtractor;

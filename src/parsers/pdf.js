@@ -3,7 +3,7 @@ const path = require("path");
 const PDFImage = require("pdf-image").PDFImage;
 const pngToJpeg = require("png-to-jpeg");
 
-const pdfCover = (filePath, outDir) => {
+const pdfParser = (filePath, outDir) => {
   const file = path.parse(filePath).name;
   const pdfImage = new PDFImage(filePath);
 
@@ -23,4 +23,4 @@ const pdfCover = (filePath, outDir) => {
     .catch(e => console.log(e));
 };
 
-module.exports = pdfCover;
+module.exports = pdfParser;

@@ -1,10 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 const convert = require("ebook-convert");
-const pdfCover = require("./pdfCover");
+const pdfParser = require("./pdf");
 const shell = require("shelljs");
 
-const ebookCover = (sourceFile, outDir) => {
+const ebookParser = (sourceFile, outDir) => {
   if (!shell.which("calibre")) {
     console.error('Need to install "calibre" first', "Run npm run setup");
   } else {
@@ -20,9 +20,9 @@ const ebookCover = (sourceFile, outDir) => {
 
     convert(options, err => {
       if (err) console.log(err);
-      pdfCover(pdfFile, outDir);
+      pdfParser(pdfFile, outDir);
     });
   }
 };
 
-module.exports = ebookCover;
+module.exports = ebookParser;

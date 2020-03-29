@@ -2,10 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const shell = require("shelljs");
 const exec = require("shelljs.exec");
-const pdfCover = require("./pdfCover");
+const pdfParser = require("./pdf");
 
-const officeCover = (sourcePath, outDir) => {
-  //this module need libreoffice
+const officeParser = (sourcePath, outDir) => {
+  //this module need libreoffice,
+  //and convert all supported by libreoffice formats to pdf
   if (!shell.which("libreoffice")) {
     console.error('Need to install "libreoffice" first', "Run npm run setup");
   } else {
@@ -23,11 +24,11 @@ const officeCover = (sourcePath, outDir) => {
     }
 
     if (fs.existsSync(pdfFile)) {
-      pdfCover(pdfFile, outDir);
+      pdfParser(pdfFile, outDir);
     } else {
       console.error("pdf file didn`t exist(office converter)");
     }
   }
 };
 
-module.exports = officeCover;
+module.exports = officeParser;

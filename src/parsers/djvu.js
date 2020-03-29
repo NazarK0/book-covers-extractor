@@ -4,7 +4,7 @@ const shell = require("shelljs");
 const exec = require("shelljs.exec");
 const sharp = require("sharp");
 
-const djvuCover = (sourcePath, outDir) => {
+const djvuParser = (sourcePath, outDir) => {
   //this module need djvulibre-bin
   if (!shell.which("ddjvu")) {
     console.error('Need to install "djvulibre-bin" first', "Run npm run setup");
@@ -29,4 +29,4 @@ const djvuCover = (sourcePath, outDir) => {
   }
 };
 
-module.exports = djvuCover;
+module.exports = djvuParser;
