@@ -15,30 +15,27 @@ const officeParser = async (files, sourcePath, outDir) => {
     const tmpDir = path.join(__dirname, "../..", "tmp");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
 
-    
-      console.log("processing office files...");
+    console.log("processing office files...");
 
-      await asyncForEach(files, async filename => {
-        const inFile = path.join(sourcePath, filename);
-        const name = filenameBase(filename);
-        const pdfFile = path.join(tmpDir, `${name}.pdf`);
+    await asyncForEach(files, async filename => {
+      const inFile = path.join(sourcePath, filename);
+      const name = filenameBase(filename);
+      const pdfFile = path.join(tmpDir, `${name}.pdf`);
 
-        await asyncExec(
-          `libreoffice --headless --convert-to pdf ${inFile} --outdir ${tmpDir}`
-        ).then(() => {
+      await asyncExec(`libreoffice --headless --convert-to pdf ${inFile} --outdir ${tmpDir}`).then(
+        () => {
           if (fs.existsSync(pdfFile)) {
-            pdfParserSingle(pdfFile, outDir);
+            pdfParserSingle(pdfFile, outDir).then(()=>{
+              fs.unlinkSync(pdfFile)
+            });
           } else {
             console.error(`${pdfFile} didn't exist(office converter)`);
           }
-        });
-      }).catch(e => console.error(e));
+        }
+      );
+    }).catch(e => console.error(e));
 
-     
-
-      console.log("office files - done.");
-      
-    
+    console.log("office files - done.");
   }
 };
 

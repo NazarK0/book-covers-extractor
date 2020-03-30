@@ -13,31 +13,27 @@ const ebookParser = async (files, sourcePath, outDir) => {
     const tmpDir = path.join(__dirname, "../..", "tmp");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
 
-    
-      console.log("processing ebook files...");
+    console.log("processing ebook files...");
 
-      await asyncForEach(files, async filename => {
-        const inFile = path.join(sourcePath, filename);
-        const name = filenameBase(filename);
-        const pdfFile = path.join(tmpDir, `${name}.pdf`);
-        const options = {
-          input: inFile,
-          output: pdfFile,
-        };
+    await asyncForEach(files, async filename => {
+      const inFile = path.join(sourcePath, filename);
+      const name = filenameBase(filename);
+      const pdfFile = path.join(tmpDir, `${name}.pdf`);
+      const options = {
+        input: inFile,
+        output: pdfFile,
+      };
 
-        convert(options, err => {
-          if (err) console.log(err);
-          pdfParserSingle(pdfFile, outDir);
+      convert(options, err => {
+        if (err) console.log(err);
+        pdfParserSingle(pdfFile, outDir).then(() => {
+          fs.unlinkSync(pdfFile);
         });
-      }).catch(e => console.error(e));
+      });
+    }).catch(e => console.error(e));
 
-      
-
-      console.log("ebook files - done.");
-    };
-
-   
-  
+    console.log("ebook files - done.");
+  }
 };
 
 module.exports = ebookParser;

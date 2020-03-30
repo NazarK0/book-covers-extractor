@@ -40,27 +40,32 @@ const BookCoversExtractor = (sourceDir, outDir = "./paperbacks") => {
                 );
 
                 const getCovers = async () => {
-                  if (PDFfiles.length > 0) {
-                   await pdfParser(PDFfiles, absoluteSourceDir, absoluteOutDir);
-                  }
+                  Promise.all([
+                    pdfParser(PDFfiles, absoluteSourceDir, absoluteOutDir),
+                    djvuParser(DJVUfiles, absoluteSourceDir, absoluteOutDir),
+                    officeParser(OFFICEfiles, absoluteSourceDir, absoluteOutDir),
+                    ebookParser(EBOOKfiles, absoluteSourceDir, absoluteOutDir),
+                  ]);
 
-                  if (DJVUfiles.length > 0) {
-                   await djvuParser(DJVUfiles, absoluteSourceDir, absoluteOutDir);
-                  }
 
-                  if (OFFICEfiles.length > 0) {
-                   await officeParser(OFFICEfiles, absoluteSourceDir, absoluteOutDir);
-                  }
+                  // if (PDFfiles.length > 0) {
+                  //  await pdfParser(PDFfiles, absoluteSourceDir, absoluteOutDir);
+                  // }
 
-                  if (EBOOKfiles.length > 0) {
-                   await ebookParser(EBOOKfiles, absoluteSourceDir, absoluteOutDir);
-                  }
+                  // if (DJVUfiles.length > 0) {
+                  //  await djvuParser(DJVUfiles, absoluteSourceDir, absoluteOutDir);
+                  // }
 
-                  const tmpDir = path.join(__dirname, "..", "tmp");
+                  // if (OFFICEfiles.length > 0) {
+                  //  await officeParser(OFFICEfiles, absoluteSourceDir, absoluteOutDir);
+                  // }
 
-                  fs.rmdirSync(tmpDir, {recursive: true})
+                  // if (EBOOKfiles.length > 0) {
+                  //  await ebookParser(EBOOKfiles, absoluteSourceDir, absoluteOutDir);
+                  // }
                 };
-                getCovers();
+
+                getCovers()
               }
             });
           }

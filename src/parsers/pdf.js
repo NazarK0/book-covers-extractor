@@ -5,51 +5,52 @@ const pngToJpeg = require("png-to-jpeg");
 const asyncForEach = require("../helpers/asyncForEach");
 const filenameBase = require("../helpers/filenameBase");
 
-const pdfParserSingle = (filePath, outDir) => {
+const pdfParserSingle = async (filePath, outDir) => {
   const file = path.parse(filePath).name;
   const pdfImage = new PDFImage(filePath);
 
-  pdfImage
+  await pdfImage
     .convertPage(0)
     .then(out => {
       if (fs.existsSync(out)) {
         let buffer = fs.readFileSync(out);
-        pngToJpeg({ quality: 90 })(buffer).then(output =>
-          fs.writeFileSync(path.join(outDir, `${file}.jpeg`), output)
-        );
+        pngToJpeg({ quality: 90 })(buffer)
+          .then(output => {
+            fs.writeFileSync(path.join(outDir, `${file}.jpeg`), output);
+            return out;
+          })
+          .then(tmp => fs.unlinkSync(tmp));
       } else {
-        console.log("file don`t exist");
+        console.log(`file ${filePath} don't exist`);
       }
     })
-
     .catch(e => console.log(e));
 };
 
 const pdfParser = async (files, sourcePath, outDir) => {
+  console.log("processing pdf files...");
 
-    console.log("processing pdf files...");
+  await asyncForEach(files, async filename => {
+     pdfParserSingle(path.join(sourcePath, filename), outDir);
 
-    await asyncForEach(files, async filename => {
-      const name = filenameBase(filename);
-      const inFile = path.join(sourcePath, filename);
-      const pdfImage = new PDFImage(inFile);
+    //   const name = filenameBase(filename);
+    //   const inFile = path.join(sourcePath, filename);
+    //   const pdfImage = new PDFImage(inFile);
 
-      pdfImage.convertPage(0).then(out => {
-        if (fs.existsSync(out)) {
-          let buffer = fs.readFileSync(out);
-          pngToJpeg({ quality: 90 })(buffer).then(output =>
-            fs.writeFileSync(path.join(outDir, `${name}.jpeg`), output)
-          );
-        } else {
-          console.log(`file ${filename} don't exist`);
-        }
-      });
-    }).catch(e => console.log(e));
+    //   pdfImage.convertPage(0).then(out => {
+    //     if (fs.existsSync(out)) {
+    //       let buffer = fs.readFileSync(out);
+    //       pngToJpeg({ quality: 90 })(buffer).then(output =>
+    //         fs.writeFileSync(path.join(outDir, `${name}.jpeg`), output)
+    //       );
+    //     } else {
+    //       console.log(`file ${filename} don't exist`);
+    //     }
+    //   });
+  }).catch(e => console.log(e));
 
-    console.log("pdf files - done.");
-  };
-
-
+  console.log("pdf files - done.");
+};
 
 module.exports = {
   pdfParser,
