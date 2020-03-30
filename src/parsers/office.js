@@ -1,33 +1,44 @@
 const fs = require("fs");
 const path = require("path");
 const shell = require("shelljs");
-const exec = require("shelljs.exec");
-const pdfParser = require("./pdf");
+const { pdfParserSingle } = require("./pdf");
+const asyncForEach = require("../helpers/asyncForEach");
+const asyncExec = require("../helpers/asyncExec");
+const filenameBase = require("../helpers/filenameBase");
 
-const officeParser = (sourcePath, outDir) => {
+const officeParser = async (files, sourcePath, outDir) => {
   //this module need libreoffice,
   //and convert all supported by libreoffice formats to pdf
   if (!shell.which("libreoffice")) {
     console.error('Need to install "libreoffice" first', "Run npm run setup");
   } else {
-    const tmpDir = path.join(__dirname, "tmp");
-    const filename = path.parse(sourcePath).name;
-    const pdfFile = path.join(tmpDir, `${filename}.pdf`);
-
+    const tmpDir = path.join(__dirname, "../..", "tmp");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
 
-    const { stderr, code, stdout } = exec(
-      `libreoffice --headless --convert-to pdf ${sourcePath} --outdir ${tmpDir}`
-    );
-    if (stderr) {
-      console.log(stderr, code);
-    }
+    
+      console.log("processing office files...");
 
-    if (fs.existsSync(pdfFile)) {
-      pdfParser(pdfFile, outDir);
-    } else {
-      console.error("pdf file didn`t exist(office converter)");
-    }
+      await asyncForEach(files, async filename => {
+        const inFile = path.join(sourcePath, filename);
+        const name = filenameBase(filename);
+        const pdfFile = path.join(tmpDir, `${name}.pdf`);
+
+        await asyncExec(
+          `libreoffice --headless --convert-to pdf ${inFile} --outdir ${tmpDir}`
+        ).then(() => {
+          if (fs.existsSync(pdfFile)) {
+            pdfParserSingle(pdfFile, outDir);
+          } else {
+            console.error(`${pdfFile} didn't exist(office converter)`);
+          }
+        });
+      }).catch(e => console.error(e));
+
+     
+
+      console.log("office files - done.");
+      
+    
   }
 };
 

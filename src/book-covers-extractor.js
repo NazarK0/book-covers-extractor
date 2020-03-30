@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const pathNormalizer = require("./helpers/pathNormalizer");
-const pdfParser = require("./parsers/pdf");
+const { pdfParser } = require("./parsers/pdf");
 const djvuParser = require("./parsers/djvu");
 const officeParser = require("./parsers/office");
 const ebookParser = require("./parsers/ebook");
@@ -39,31 +39,28 @@ const BookCoversExtractor = (sourceDir, outDir = "./paperbacks") => {
                   file.match(officeSupportedFormats)
                 );
 
-                console.log('processing...');
+                const getCovers = async () => {
+                  if (PDFfiles.length > 0) {
+                   await pdfParser(PDFfiles, absoluteSourceDir, absoluteOutDir);
+                  }
 
-                if (PDFfiles.length > 0) {
-                  PDFfiles.forEach(file =>
-                    pdfParser(path.join(absoluteSourceDir, file), absoluteOutDir)
-                  );
-                }
+                  if (DJVUfiles.length > 0) {
+                   await djvuParser(DJVUfiles, absoluteSourceDir, absoluteOutDir);
+                  }
 
-                if (DJVUfiles.length > 0) {
-                  DJVUfiles.forEach(file =>
-                    djvuParser(path.join(absoluteSourceDir, file), absoluteOutDir)
-                  );
-                }
+                  if (OFFICEfiles.length > 0) {
+                   await officeParser(OFFICEfiles, absoluteSourceDir, absoluteOutDir);
+                  }
 
-                if (OFFICEfiles.length > 0) {
-                  OFFICEfiles.forEach(file =>
-                    officeParser(path.join(absoluteSourceDir, file), absoluteOutDir)
-                  );
-                }
+                  if (EBOOKfiles.length > 0) {
+                   await ebookParser(EBOOKfiles, absoluteSourceDir, absoluteOutDir);
+                  }
 
-                if (EBOOKfiles.length > 0) {
-                  EBOOKfiles.forEach(file =>
-                    ebookParser(path.join(absoluteSourceDir, file), absoluteOutDir)
-                  );
-                }
+                  const tmpDir = path.join(__dirname, "..", "tmp");
+
+                  fs.rmdirSync(tmpDir, {recursive: true})
+                };
+                getCovers();
               }
             });
           }

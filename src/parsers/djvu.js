@@ -1,31 +1,38 @@
 const fs = require("fs");
 const path = require("path");
 const shell = require("shelljs");
-const exec = require("shelljs.exec");
 const sharp = require("sharp");
+const asyncForEach = require("../helpers/asyncForEach");
+const asyncExec = require("../helpers/asyncExec");
+const filenameBase = require("../helpers/filenameBase");
 
-const djvuParser = (sourcePath, outDir) => {
+const djvuParser = async (files, sourcePath, outDir) => {
   //this module need djvulibre-bin
   if (!shell.which("ddjvu")) {
     console.error('Need to install "djvulibre-bin" first', "Run npm run setup");
   } else {
-    const file = path.parse(sourcePath).name;
-    const outFile = path.join(outDir, `${file}.tiff`);
 
-    const { stderr, code } = exec(`ddjvu -format=tiff -page=1 ${sourcePath} ${outFile}`);
+      console.log("processing djvu files...");
 
-    if (stderr) {
-      console.log(stderr, code);
-    }
+      await asyncForEach(files, async filename => {
+        const inFile = path.join(sourcePath, filename);
+        const name = filenameBase(filename);
+        const outFile = path.join(outDir, `${name}.tiff`);
 
-    if (fs.existsSync(outFile)) {
-      sharp(outFile)
-        .toFile(`${path.join(outDir, file)}.jpeg`)
-        .then(() => fs.unlinkSync(outFile))
-        .catch(e => console.error(e));
-    } else {
-      console.error("tiff file didn`t exist");
-    }
+        asyncExec(`ddjvu -format=tiff -page=1 ${inFile} ${outFile}`).then(() => {
+          if (fs.existsSync(outFile)) {
+            sharp(outFile)
+              .toFile(`${path.join(outDir, name)}.jpeg`)
+              .then(() => fs.unlinkSync(outFile))
+              .catch(e => console.error(e));
+          } else {
+            console.error(`${outFile} didn't exist`);
+          }
+        });
+      }).catch(e => console.error(e));
+
+      console.log("djvu files - done.");
+
   }
 };
 
