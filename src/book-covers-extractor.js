@@ -6,7 +6,7 @@ const djvuParser = require("./parsers/djvu");
 const officeParser = require("./parsers/office");
 const ebookParser = require("./parsers/ebook");
 
-const BookCoversExtractor = (sourceDir, outDir = "./paperbacks") => {
+const BookCoversExtractor = (sourceDir, outDir = "~/paperbacks") => {
   pathNormalizer.inputDirectory(sourceDir, (err, absoluteSourceDir) => {
     if (err) {
       console.error(err);

@@ -7,7 +7,10 @@ const asyncForEach = require("../helpers/asyncForEach");
 
 const ebookParser = async (files, sourcePath, outDir) => {
   if (!shell.which("calibre")) {
-    console.error('Need to install "calibre" first', "Run npm run setup");
+    console.error(
+      'Need to install "calibre"',
+      "Wait while other files wil be converted and run\napt-get update && apt-get install calibre"
+    );
   } else {
     const tmpDir = path.join(__dirname, "../..", "tmp");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);

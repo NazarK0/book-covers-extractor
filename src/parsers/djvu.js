@@ -8,7 +8,8 @@ const asyncExec = require("../helpers/asyncExec");
 const djvuParser = async (files, sourcePath, outDir) => {
   //this module need djvulibre-bin
   if (!shell.which("ddjvu")) {
-    console.error('Need to install "djvulibre-bin" first', "Run npm run setup");
+    console.error('Need to install "djvulibre-bin"', 
+    "Wait while other files will be converted and run\napt-get update && apt-get install djvulibre-bin");
   } else {
     await asyncForEach(files, async filename => {
       const inFile = path.join(sourcePath, filename);

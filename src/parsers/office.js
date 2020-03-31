@@ -9,7 +9,10 @@ const officeParser = async (files, sourcePath, outDir) => {
   //this module need libreoffice,
   //and convert all supported by libreoffice formats to pdf
   if (!shell.which("libreoffice")) {
-    console.error('Need to install "libreoffice" first', "Run npm run setup");
+    console.error(
+      'Need to install "libreoffice" first',
+      "Wait while other files wil be converted and run npm run \npt-get install libreoffice [--no-install-recommends]"
+    );
   } else {
     const tmpDir = path.join(__dirname, "../..", "tmp");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);

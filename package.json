@@ -4,8 +4,7 @@
   "description": "This library extract cover from a lot of document formats from exact folder",
   "main": "index.js",
   "scripts": {
-    "start": "node app",
-    "setup": "node setup"
+    "start": "node app"
   },
   "keywords": [
     "book-covers",
