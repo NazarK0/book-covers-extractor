@@ -4,7 +4,6 @@ const convert = require("ebook-convert");
 const { pdfParserSingle } = require("./pdf");
 const shell = require("shelljs");
 const asyncForEach = require("../helpers/asyncForEach");
-const filenameBase = require("../helpers/filenameBase");
 
 const ebookParser = async (files, sourcePath, outDir) => {
   if (!shell.which("calibre")) {
@@ -13,11 +12,9 @@ const ebookParser = async (files, sourcePath, outDir) => {
     const tmpDir = path.join(__dirname, "../..", "tmp");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
 
-    console.log("processing ebook files...");
-
     await asyncForEach(files, async filename => {
       const inFile = path.join(sourcePath, filename);
-      const name = filenameBase(filename);
+      const name = path.parse(filename).name;
       const pdfFile = path.join(tmpDir, `${name}.pdf`);
       const options = {
         input: inFile,
@@ -26,13 +23,17 @@ const ebookParser = async (files, sourcePath, outDir) => {
 
       convert(options, err => {
         if (err) console.log(err);
-        pdfParserSingle(pdfFile, outDir).then(() => {
-          fs.unlinkSync(pdfFile);
-        });
+        pdfParserSingle(pdfFile, outDir)
+          .then(() => {
+            fs.unlinkSync(pdfFile);
+            const tmpIndex = path.join(sourcePath, "index-1.html");
+            if (fs.existsSync(tmpIndex)) {
+              fs.unlinkSync(tmpIndex);
+            }
+          })
+          .catch(e => console.error(e));
       });
     }).catch(e => console.error(e));
-
-    console.log("ebook files - done.");
   }
 };
 

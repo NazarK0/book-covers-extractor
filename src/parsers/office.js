@@ -4,7 +4,6 @@ const shell = require("shelljs");
 const { pdfParserSingle } = require("./pdf");
 const asyncForEach = require("../helpers/asyncForEach");
 const asyncExec = require("../helpers/asyncExec");
-const filenameBase = require("../helpers/filenameBase");
 
 const officeParser = async (files, sourcePath, outDir) => {
   //this module need libreoffice,
@@ -15,18 +14,16 @@ const officeParser = async (files, sourcePath, outDir) => {
     const tmpDir = path.join(__dirname, "../..", "tmp");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
 
-    console.log("processing office files...");
-
     await asyncForEach(files, async filename => {
       const inFile = path.join(sourcePath, filename);
-      const name = filenameBase(filename);
+      const name = path.parse(filename).name;
       const pdfFile = path.join(tmpDir, `${name}.pdf`);
 
       await asyncExec(`libreoffice --headless --convert-to pdf ${inFile} --outdir ${tmpDir}`).then(
         () => {
           if (fs.existsSync(pdfFile)) {
-            pdfParserSingle(pdfFile, outDir).then(()=>{
-              fs.unlinkSync(pdfFile)
+            pdfParserSingle(pdfFile, outDir).then(() => {
+              fs.unlinkSync(pdfFile);
             });
           } else {
             console.error(`${pdfFile} didn't exist(office converter)`);
@@ -34,8 +31,6 @@ const officeParser = async (files, sourcePath, outDir) => {
         }
       );
     }).catch(e => console.error(e));
-
-    console.log("office files - done.");
   }
 };
 

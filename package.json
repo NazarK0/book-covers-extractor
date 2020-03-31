@@ -1,14 +1,18 @@
 {
   "name": "book-covers-extractor",
-  "version": "0.1.23",
-  "description": "This library extract cover from a lot of document formats from folder",
+  "version": "0.17.23",
+  "description": "This library extract cover from a lot of document formats from exact folder",
   "main": "index.js",
   "scripts": {
     "start": "node app",
     "setup": "node setup"
   },
-  "keywords": ["book-covers", "extractor", "document-parser"],
-    "repository": {
+  "keywords": [
+    "book-covers",
+    "extractor",
+    "document-parser"
+  ],
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/NazarK0/book-covers-extractor.git"
   },
@@ -20,6 +24,7 @@
   "homepage": "https://github.com/NazarK0/book-covers-extractor#readme",
   "dependencies": {
     "ebook-convert": "^2.0.1",
+    "fs-readdir-recursive": "^1.1.0",
     "pdf-image": "^2.0.0",
     "png-to-jpeg": "^1.0.1",
     "set-value": "^3.0.1",
