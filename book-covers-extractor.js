@@ -1,10 +1,10 @@
 const path = require("path");
 const fsReaddirRecursive = require("fs-readdir-recursive");
-const pathNormalizer = require("./helpers/pathNormalizer");
-const { pdfParser } = require("./parsers/pdf");
-const djvuParser = require("./parsers/djvu");
-const officeParser = require("./parsers/office");
-const ebookParser = require("./parsers/ebook");
+const pathNormalizer = require("./src/helpers/pathNormalizer");
+const { pdfParser } = require("./src/parsers/pdf");
+const djvuParser = require("./src/parsers/djvu");
+const officeParser = require("./src/parsers/office");
+const ebookParser = require("./src/parsers/ebook");
 
 const BookCoversExtractor = (sourceDir, outDir = "~/paperbacks") => {
   pathNormalizer.inputDirectory(sourceDir, (err, absoluteSourceDir) => {

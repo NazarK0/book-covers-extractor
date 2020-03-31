@@ -1,4 +1,4 @@
-**About:**This package extracts first page of various documents from pointed folder and convert to jpeg picture
+**About:** This package extracts first page of various documents from pointed folder and convert to jpeg picture
 
 **Supported OS:** GNU/Linux only( Server and desktop ).
 
