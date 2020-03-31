@@ -28,7 +28,10 @@ const ebookParser = async (files, sourcePath, outDir) => {
         if (err) console.log(err);
         pdfParserSingle(pdfFile, outDir)
           .then(() => {
-            fs.unlinkSync(pdfFile);
+            if (fs.existsSync(pdfFile)) {
+              fs.unlinkSync(pdfFile);
+            }
+
             const tmpIndex = path.join(sourcePath, "index-1.html");
             if (fs.existsSync(tmpIndex)) {
               fs.unlinkSync(tmpIndex);

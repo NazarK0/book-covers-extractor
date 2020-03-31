@@ -26,7 +26,9 @@ const officeParser = async (files, sourcePath, outDir) => {
         () => {
           if (fs.existsSync(pdfFile)) {
             pdfParserSingle(pdfFile, outDir).then(() => {
-              fs.unlinkSync(pdfFile);
+              if (fs.existsSync(pdfFile)) {
+                fs.unlinkSync(pdfFile);
+              }
             });
           } else {
             console.error(`${pdfFile} didn't exist(office converter)`);

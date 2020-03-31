@@ -18,7 +18,11 @@ const pdfParserSingle = async (filePath, outDir) => {
             fs.writeFileSync(path.join(outDir, `${file}.jpeg`), output);
             return out;
           })
-          .then(tmp => fs.unlinkSync(tmp));
+          .then(tmp => {
+            if (fs.existsSync(tmp)) {
+              fs.unlinkSync(tmp);
+            }
+          });
       } else {
         console.log(`file ${filePath} don't exist`);
       }

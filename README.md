@@ -1,5 +1,7 @@
 **About:** This package extracts first page of various documents from pointed folder and convert to jpeg picture
 
+**Return:** Promise
+
 **Supported OS:** GNU/Linux only( Server and desktop ).
 
 **Before usage:** on machine must be installed libreoffice, calibre and djvulibre-bin. If you don`t have
@@ -43,15 +45,28 @@ key *--no-install-recommends* optional, use it if you use package on server, thi
 - vsd, vsdx
 - rtf
 
-**Usage:**
+### Usage:
 
 You must specify in which folder exist documents that need to convert. In folder could exist another folders, package process all of them recursively. Source folder path could be or relative or absolute.
 
 ```javascript
-const BookCoversExtractor = require('book-covers-extractor');
+const CoversExtractor = require('covers-extractor');
 //by default images will be stored in your home directory in folder 'paperbacks'
-BookCoversExtractor("./books");
+CoversExtractor("./books");
 
 //also you can manually point in which folder images will be stored. You can use as absolute as relative paths. If folder don`t exist, it will be created.
-BookCoversExtractor("./books", "/home/users/FooUser");
+CoversExtractor("./books", "/home/users/FooUser");
+
+//multiple usage
+(async () => {
+  console.log("processing...");
+  await CoversExtractor("~/Projects/node/books");
+  console.log("done.");
+
+  console.log("processing...");
+  await CoversExtractor("~/Projects/node/books", "~/testcovers");
+  console.log("done.");
+})();
+
+
 ```

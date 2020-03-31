@@ -6,43 +6,39 @@ const normalizeIfHomePath = sourceDir => {
   return sourceDir.startsWith("~") ? path.join(homedir, sourceDir.substring(1)) : sourceDir;
 };
 
-const inputDirectory = (dirPath, callback) => {
+const inputDirectory = dirPath => {
   const normalized = normalizeIfHomePath(dirPath);
 
-  fs.access(normalized, err => {
-    if (err) {
-      callback("input directory didn`t exist", null);
+  if (fs.existsSync(normalized)) {
+    if (path.isAbsolute(normalized)) {
+      return normalized;
     } else {
-      if (path.isAbsolute(normalized)) {
-        callback(null, normalized);
-      } else {
-        callback(null, path.resolve(normalized));
-      }
+      return path.resolve(normalized);
     }
-  });
+  } else {
+    console.log("input directory didn`t exist");
+    return null;
+  }
 };
 
-const outputDirectory = (dirPath, callback) => {
+const outputDirectory = dirPath => {
   const normalized = normalizeIfHomePath(dirPath);
 
-  fs.access(normalized, err => {
-    if (err) {
-      fs.mkdir(normalized, { recursive: true }, e => {
-        if (e) {
-          callback("Can`t create output dir", null);
-        } else {
-          console.log("Output directory created");
-          callback(null, normalized);
-        }
-      });
+  if (fs.existsSync(normalized)) {
+    if (path.isAbsolute(normalized)) {
+      return normalized;
     } else {
-      if (path.isAbsolute(normalized)) {
-        callback(null, normalized);
-      } else {
-        callback(null, path.resolve(normalized));
-      }
+      return path.resolve(normalized);
     }
-  });
+  } else {
+    try {
+      fs.mkdirSync(normalized, { recursive: true });
+      return normalized;
+    } catch (e) {
+      console.log("Can`t create output dir", e);
+      return null;
+    }
+  }
 };
 
 const fileName = filePath => {
