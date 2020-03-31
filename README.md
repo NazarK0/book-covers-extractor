@@ -48,6 +48,7 @@ key *--no-install-recommends* optional, use it if you use package on server, thi
 You must specify in which folder exist documents that need to convert. In folder could exist another folders, package process all of them recursively. Source folder path could be or relative or absolute.
 
 ```javascript
+const BookCoversExtractor = require('book-covers-extractor');
 //by default images will be stored in your home directory in folder 'paperbacks'
 BookCoversExtractor("./books");
 
