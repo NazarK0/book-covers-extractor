@@ -27,7 +27,7 @@
     "fs-readdir-recursive": "^1.1.0",
     "pdf-image": "^2.0.0",
     "png-to-jpeg": "^1.0.1",
-    "set-value": "^3.0.1",
+    "set-value": "^4.0.1",
     "sharp": "^0.25.2",
     "shelljs": "^0.8.3",
     "shelljs.exec": "^1.1.8"
